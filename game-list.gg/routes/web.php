@@ -12,10 +12,15 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
 use App\Http\Controllers\GameController;
-Route::get('/', [ GameController::class, 'GetList' ]);
+
+Route::get('/', [ GameController::class, 'GetList' ])->name('list');
+
+Route::get('/new', [ GameController::class, 'NewRecord' ])->name('new_record');
+Route::post('/new', [ GameController::class, 'SaveNewRecord' ]);
+
 Route::get('/info/{id}', [ GameController::class, 'GetInfo' ]);
-Route::get('/new', [ GameController::class, 'NewRec' ]);
-Route::post('/new/check', [ GameController::class, 'Check' ]);
+
+Route::get('/edit/{id}',[GameController::class,'EditPackage']);
+Route::post('/edit/{id}',[GameController::class,'EditRecord']);
 

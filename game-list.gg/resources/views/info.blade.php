@@ -1,20 +1,27 @@
-@extends('sample')
+@extends('layouts.main_layout')
 
-@section('title')
-    {{$record->game}}
-@endsection
-
-@section('navigation')
-    <ul class="nav nav-pills">
-        <li class="nav-item"><a href="/" class="nav-link">Главная</a></li>
-    </ul>
-@endsection
+@section('title', $record->game_name)
 
 @section('content')
-    <p>{{$record->game}}</p>
-    <p>Жанр: {{$record->genre}}</p>
-    <p>Дата выхода: {{$record->releaseDate}}</p>
-    <p>Разработчик: {{$record->developer}}</p>
-    <p>Оценка: {{$record->rating}}</p>
-    <p>Описание:<br><textarea readonly="readonly" cols="50" rows="5">{{$record->description}}</textarea></p>
+
+    <img src="{{$image_path}}" class="img-fluid" height="200">
+
+    <p><b>{{$record->game_name}}</b></p>
+
+    <p><ul class="list-group"><b>Жанры:</b>
+    @foreach($record->genres as $genre)
+            <li>{{$genre->genre_name}}</li>
+    @endforeach
+    </ul></p>
+
+    <p><b>Дата выхода:</b> {{$record->release_date}}</p>
+
+    <p><b>Издатель:</b> {{$record->publishers->publisher_name}}</p>
+    <p><b>Разработчик:</b> {{$record->developers->developer_name}}</p>
+
+    <p><b>Оценка:</b> {{$record->rating}}</p>
+    <p><b>Описание:</b><br>{{$record->description}}</p>
+
+    <a href="/edit/{{$record->id}}">Редактировать запись</a>
+    <p></p>
 @endsection

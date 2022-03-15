@@ -2,48 +2,101 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\GameList;
+use App\Http\Requests\GameFormRequest;
+use App\Models\Games;
+use App\Models\Genres;
+use App\Models\Publishers;
+use App\Models\Developers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class GameController extends Controller
 
 {
-    public function NewRec()
-{
-    return view('newrec');
-}
+    public function NewRecord()
+    {
+        $genres = Genres::all();
+        $publishers = Publishers::all();
+        return view('new_record',compact('genres','publishers'));
+    }
+
+    public function EditPackage($id)
+    {
+        $record = Games::find($id);
+        $genres = Genres::all();
+        $publishers = Publishers::all();
+        $image_path = $this->GetImagePath($record);
+        return view('edit_record', compact('record','image_path', 'genres', 'publishers'));
+    }
     public function GetList()
     {
-        $records = new GameList();
-        return view('list',['records' => $records->all()]);
+        $records = Games::all();
+        return view('list',compact('records'));
     }
     public function GetInfo($id)
     {
-        $records = new GameList();
-        return view('info', ['record' => $records->find($id)]);
+        $record = Games::find($id);
+        $image_path = $this->GetImagePath($record);
+        return view('info', compact('record', 'image_path'));
     }
-    public function Check(Request $request)
+    public function GetImagePath($record)
+{
+    if($record->image_path != null)
+        $image_path = asset('/storage/' . $record->image_path);
+    else
+        $image_path = asset('/storage/images/no_image.png');
+    return $image_path;
+}
+
+    public function SaveNewRecord(GameFormRequest $request)
     {
-            //я дебил, нахуя я это сделал, пользователь просто не сможет сделать ошибку)
-            $check = $request->validate([
-                'game' => 'required|max:100',
-                'genre' => 'required|max:50',
-                'releaseDate' => 'required',
-                'developer' => 'required|max:100',
-                'rating' => 'required|min:1|max:10',
-                'description' => 'required|max:500',
-            ]);
+        try
+        {
+            $games = new Games();
+            $this->SaveRecord($games,$request);
+            return redirect()->back()->with('message','Запись сохранена');
+        }
+        catch (\Exception $e)
+        {
+            return redirect()->back()->with('error',$e);
+        }
+    }
+    public function SaveRecord(Games $games, GameFormRequest $request)
+    {
+        $genres = $request->get('genres');
 
-        $record = new GameList();
-        $record->game = $request->input('game');
-        $record->genre = $request->input('genre');
-        $record->releaseDate = $request->input('releaseDate');
-        $record->developer = $request->input('developer');
-        $record->rating = $request->input('rating');
-        $record->description = $request->input('description');
+        $games->game_name = $request->get('game');
+        $games->publisher_id = $request->get('publisher');
+        $games->developer_id = $request->get('developer');
+        $games->release_date = $request->get('release_date');
+        $games->rating = $request->get('rating');
+        $games->description = $request->get('description');
 
-        $record->save();
+        if($request->file('image')!=null) {
+            $path = Storage::disk('public')->putFile('images', $request->file('image'));
+            $games->image_path = $path;
+        } else {
+            $games->image_path = null;
+        }
+        $games->save();
+        $games->genres()->attach($genres);
+    }
+    public function EditRecord($id, GameFormRequest $request)
+    {
+        try
+        {
+            $games = Games::find($id);
+            $this->SaveRecord($games, $request);
+            return redirect()->back()->with('message','Запись сохранена');
+        }
+        catch (\Exception $e)
+        {
+            return redirect()->back()->with('error',$e);
+        }
+    }
+    public function DeleteRecord()
+    {
 
-        return redirect()->back()->with('message','Запись сохранена');
     }
 }
