@@ -21,7 +21,7 @@ class GameController extends Controller
         return view('new_record',compact('genres','publishers'));
     }
 
-    public function EditPackage($id)
+    public function GetEditPackage($id)
     {
         $record = Games::find($id);
         $genres = Genres::all();
@@ -40,6 +40,7 @@ class GameController extends Controller
         $image_path = $this->GetImagePath($record);
         return view('info', compact('record', 'image_path'));
     }
+
     public function GetImagePath($record)
 {
     if($record->image_path != null)
@@ -49,20 +50,7 @@ class GameController extends Controller
     return $image_path;
 }
 
-    public function SaveNewRecord(GameFormRequest $request)
-    {
-        try
-        {
-            $games = new Games();
-            $this->SaveRecord($games,$request);
-            return redirect()->back()->with('message','Запись сохранена');
-        }
-        catch (\Exception $e)
-        {
-            return redirect()->back()->with('error',$e);
-        }
-    }
-    public function SaveRecord(Games $games, GameFormRequest $request)
+    public function SaveRecord(Games $games, GameFormRequest $request, $img_save)
     {
         $genres = $request->get('genres');
 
@@ -73,21 +61,38 @@ class GameController extends Controller
         $games->rating = $request->get('rating');
         $games->description = $request->get('description');
 
-        if($request->file('image')!=null) {
-            $path = Storage::disk('public')->putFile('images', $request->file('image'));
-            $games->image_path = $path;
-        } else {
-            $games->image_path = null;
+        if($img_save == 0) {
+            if ($request->file('image') != null) {
+                $path = Storage::disk('public')->putFile('images', $request->file('image'));
+                $games->image_path = $path;
+            } else {
+                $games->image_path = null;
+            }
         }
         $games->save();
         $games->genres()->attach($genres);
     }
+    public function SaveNewRecord(GameFormRequest $request)
+    {
+        try
+        {
+            $games = new Games();
+            $this->SaveRecord($games,$request,0);
+            return redirect()->back()->with('message','Запись сохранена');
+        }
+        catch (\Exception $e)
+        {
+            return redirect()->back()->with('error',$e);
+        }
+    }
+
     public function EditRecord($id, GameFormRequest $request)
     {
         try
         {
             $games = Games::find($id);
-            $this->SaveRecord($games, $request);
+            $img_save = $request->get('img_save');
+            $this->SaveRecord($games, $request,$img_save);
             return redirect()->back()->with('message','Запись сохранена');
         }
         catch (\Exception $e)

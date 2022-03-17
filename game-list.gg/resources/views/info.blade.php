@@ -4,7 +4,7 @@
 
 @section('content')
 
-    <img src="{{$image_path}}" class="img-fluid" height="200">
+    <img src="{{$image_path}}" class="img-fluid" height="150">
 
     <p><b>{{$record->game_name}}</b></p>
 

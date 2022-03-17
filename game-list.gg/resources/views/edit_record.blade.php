@@ -74,7 +74,9 @@
         </p>
 
         <p>Изображение:<br>
-            <img src="{{$image_path}}" class="img-fluid" height="200"><br>
+            <img src="{{$image_path}}" class="img-fluid" height="150"><br>
+            <input type="hidden" name="img_save" value="0">
+            <input type="checkbox" name="img_save" value="1">Оставить прежнее изображение?<br>
             <input type="file" name="image" accept="image/*" value="{{$image_path}}"><br>
         </p>
 

@@ -32,6 +32,7 @@ class GameFormRequest extends FormRequest
             'publisher' => 'required|exists:publishers,id',
             'rating' => 'required|min:1|max:10',
             'description' => 'required|max:500',
+            'img_save'=>'integer|max:1|min:0',
         ];
     }
 }

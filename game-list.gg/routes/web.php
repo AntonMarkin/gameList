@@ -21,6 +21,6 @@ Route::post('/new', [ GameController::class, 'SaveNewRecord' ]);
 
 Route::get('/info/{id}', [ GameController::class, 'GetInfo' ]);
 
-Route::get('/edit/{id}',[GameController::class,'EditPackage']);
+Route::get('/edit/{id}',[GameController::class,'GetEditPackage']);
 Route::post('/edit/{id}',[GameController::class,'EditRecord']);
 
