@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Filters\Filter;
 use App\Http\Requests\GameFormRequest;
 use App\Models\Games;
 use App\Models\Genres;
 use App\Models\Publishers;
-use App\Models\Developers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -29,10 +29,15 @@ class GameController extends Controller
         $image_path = $this->GetImagePath($record);
         return view('edit_record', compact('record','image_path', 'genres', 'publishers'));
     }
-    public function GetList()
+    public function GetList(Request $request)
     {
         $records = Games::all();
-        return view('list',compact('records'));
+        $publishers = Publishers::all();
+
+        $records = Filter::PublishersFilter($request, $records);
+        $records = Filter::DateSort($request, $records);
+
+        return view('list',compact('records', 'publishers'));
     }
     public function GetInfo($id)
     {
@@ -92,16 +97,22 @@ class GameController extends Controller
         {
             $games = Games::find($id);
             $img_save = $request->get('img_save');
-            $this->SaveRecord($games, $request,$img_save);
-            return redirect()->back()->with('message','Запись сохранена');
+            $games->genres()->detach();
+            if($request->get('delete') == 0) {
+                $this->SaveRecord($games, $request, $img_save);
+                return redirect('/info/'.$id)->with('message', 'Запись сохранена');
+            }
+            else return $this->DeleteRecord($games);
         }
         catch (\Exception $e)
         {
             return redirect()->back()->with('error',$e);
         }
     }
-    public function DeleteRecord()
+    public function DeleteRecord(Games $games)
     {
-
+        $games->genres()->detach();
+        $games->delete();
+        return redirect('/')->with('message', 'Запись удалена');
     }
 }

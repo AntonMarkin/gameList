@@ -4,20 +4,6 @@
 
 @section('content')
 
-    @if(Session::has('message'))
-        <div class="alert alert-success">
-            <p>{{Session::get('message')}}</p>
-        </div>
-    @elseif($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
     <form enctype="multipart/form-data" method="post" >
         @csrf
         <p>Название игры:<br>
@@ -76,13 +62,14 @@
         <p>Изображение:<br>
             <img src="{{$image_path}}" class="img-fluid" height="150"><br>
             <input type="hidden" name="img_save" value="0">
-            <input type="checkbox" name="img_save" value="1">Оставить прежнее изображение?<br>
+            <input checked type="checkbox" name="img_save" value="1">Оставить прежнее изображение?<br>
             <input type="file" name="image" accept="image/*" value="{{$image_path}}"><br>
         </p>
 
         <p>Описание:<br>
             <textarea name="description" id="description" cols="50" rows="5" maxlength="500" placeholder="Не более 500 символов" required >{{ $record->description }}</textarea></p>
-        <input type="submit">
+        <button type="submit" class="btn btn-success">Сохранить запись</button> <button name="delete" type="submit" value="1" class="btn btn-danger">Удалить запись</button>
     </form>
+
 
 @endsection

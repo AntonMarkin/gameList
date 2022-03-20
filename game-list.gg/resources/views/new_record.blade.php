@@ -55,10 +55,10 @@
         <input type="number" name="rating" id="rating" min="1" max="10" step="0.1" value="{{ old('rating') }}" required>
         </p>
         <p>Изображение:<br>
-            <input type="file" name="image" accept="image/*"><br>`````
+            <input type="file" name="image" accept="image/*"><br>
         </p>
         <p>Описание:<br>
-            <textarea name="description" id="description" cols="50" rows="5" maxlength="500" value="{{ old('description') }} placeholder="Не более 500 символов" required ></textarea></p>
+            <textarea name="description" id="description" cols="50" rows="5" maxlength="500" value="{{ old('description') }}" placeholder="Не более 500 символов" required ></textarea></p>
         <input type="submit">
     </form>
 
