@@ -75,6 +75,7 @@ class GameController extends Controller
             }
         }
         $games->save();
+        $games->genres()->detach();
         $games->genres()->attach($genres);
     }
     public function SaveNewRecord(GameFormRequest $request)
@@ -97,7 +98,6 @@ class GameController extends Controller
         {
             $games = Games::find($id);
             $img_save = $request->get('img_save');
-            $games->genres()->detach();
             if($request->get('delete') == 0) {
                 $this->SaveRecord($games, $request, $img_save);
                 return redirect('/info/'.$id)->with('message', 'Запись сохранена');

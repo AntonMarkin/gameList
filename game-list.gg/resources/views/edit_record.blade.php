@@ -68,6 +68,12 @@
 
         <p>Описание:<br>
             <textarea name="description" id="description" cols="50" rows="5" maxlength="500" placeholder="Не более 500 символов" required >{{ $record->description }}</textarea></p>
+        <hr>
+        <p>ТЕСТ РАБОТЫ МИДЛВАРЫЧА выглядит так потому что онтон не придумал ничего интереснее<br>
+            <input type="hidden" name="midlewar" value="f">
+            <input type="checkbox" name="midlewar" value="t">Вы автоpизованный пользователь?</p>
+        <hr>
+
         <button type="submit" class="btn btn-success">Сохранить запись</button> <button name="delete" type="submit" value="1" class="btn btn-danger">Удалить запись</button>
     </form>
 

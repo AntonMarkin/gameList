@@ -17,10 +17,10 @@ use App\Http\Controllers\GameController;
 Route::get('/', [ GameController::class, 'GetList' ])->name('list');
 
 Route::get('/new', [ GameController::class, 'NewRecord' ])->name('new_record');
-Route::post('/new', [ GameController::class, 'SaveNewRecord' ]);
+Route::post('/new', [ GameController::class, 'SaveNewRecord' ])->middleware('test');
 
 Route::get('/info/{id}', [ GameController::class, 'GetInfo' ]);
 
 Route::get('/edit/{id}',[GameController::class,'GetEditPackage']);
-Route::post('/edit/{id}',[GameController::class,'EditRecord']);
+Route::post('/edit/{id}',[GameController::class,'EditRecord'])->middleware('test');
 

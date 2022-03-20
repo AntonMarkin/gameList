@@ -3,19 +3,6 @@
 @section('title', 'Добавление записи')
 
 @section('content')
-    @if(Session::has('message'))
-        <div class="alert alert-success">
-            <p>{{Session::get('message')}}</p>
-        </div>
-    @elseif($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
 
     <form enctype="multipart/form-data" method="post" >
         @csrf
@@ -59,6 +46,11 @@
         </p>
         <p>Описание:<br>
             <textarea name="description" id="description" cols="50" rows="5" maxlength="500" value="{{ old('description') }}" placeholder="Не более 500 символов" required ></textarea></p>
+
+        <p>ТЕСТ РАБОТЫ МИДЛВАРЫЧА выглядит так потому что онтон не придумал ничего интереснее<br>
+            <input type="hidden" name="midlewar" value="0">
+            <input type="checkbox" name="midlewar" value="1">Вы автоpизованный пользователь?</p>
+
         <input type="submit">
     </form>
 
