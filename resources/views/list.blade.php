@@ -4,24 +4,25 @@
 
 @section('content')
     <h2>Список гамесов:</h2>
-    <p>Фильтрация</p>
 
     <form>
+        <label>Фильтровать</label>
         <select name="publisher_filter">
             <option selected disabled>По издателю</option>
             @foreach($publishers as $publisher)
                 <option value="{{$publisher->id}}">{{$publisher->publisher_name}}</option>
             @endforeach
         </select>
-
+        <label>Сортировать</label>
         <select name="order_by_date">
             <option selected disabled>По дате выхода</option>
             <option value="asc">По возрастанию</option>
             <option value="desc">По убыванию</option>
         </select>
 
-        <button type="submit" class="btn btn-primary">Фильтровать</button>
+        <button type="submit" class="btn btn-primary">Найти</button>
     </form>
+
 
     <div class="table-responsive">
         <table class="table table-sm">
